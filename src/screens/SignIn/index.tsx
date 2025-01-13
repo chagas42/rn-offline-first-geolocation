@@ -2,6 +2,8 @@ import { useState } from "react";
 import { Container, Title, Slogan } from "./styles";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
 
+import { Realm, useApp } from "@realm/react";
+
 import backgroundImg from "../../assets/background.png";
 import { Button } from "../../compoents/Button";
 
@@ -16,6 +18,7 @@ GoogleSignin.configure({
 
 export const SignIn = () => {
   const [isAuthenticating, setIsAuthenticating] = useState(false);
+  const app = useApp();
 
   async function handleGoogleSignIn() {
     try {
@@ -23,8 +26,9 @@ export const SignIn = () => {
 
       const response = await GoogleSignin.signIn();
       if (response.data?.idToken) {
-        console.log(response.data);
-        setIsAuthenticating(false);
+        const credentials = Realm.Credentials.jwt(response.data.idToken);
+
+        await app.logIn(credentials);
       } else {
         Alert.alert("Entrar", "foi possivel conectar-se a sua conta google.");
         setIsAuthenticating(false);
@@ -56,11 +60,11 @@ export const SignIn = () => {
         onPress={handleGoogleSignIn}
       />
 
-      <Button
+      {/* <Button
         title="Entrar com a Apple"
         isLoading={isAuthenticating}
         onPress={handleAppleSigIn}
-      />
+      /> */}
     </Container>
   );
 };
