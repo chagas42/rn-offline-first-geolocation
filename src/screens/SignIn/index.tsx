@@ -5,7 +5,7 @@ import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import { Realm, useApp } from "@realm/react";
 
 import backgroundImg from "../../assets/background.png";
-import { Button } from "../../compoents/Button";
+import { Button } from "../../components/Button";
 
 import { WEB_CLIENT_ID, IOS_CLIENT_ID } from "@env";
 import { Alert } from "react-native";

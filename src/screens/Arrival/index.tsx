@@ -3,9 +3,9 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import { BSON } from 'realm';
 import { X } from 'phosphor-react-native';
 
-import { ButtonIcon } from '../../compoents/ButtonIcon';
-import { Header } from '../../compoents/Header';
-import { Button } from '../../compoents/Button';
+import { ButtonIcon } from '../../components/ButtonIcon';
+import { Header } from '../../components/Header';
+import { Button } from '../../components/Button';
 
 import { useObject, useRealm } from '../../libs/realm';
 import { Historic } from '../../libs/realm/schemas/Historic';

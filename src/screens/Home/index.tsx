@@ -6,11 +6,12 @@ import dayjs from 'dayjs';
 import { useQuery, useRealm } from "../../libs/realm";
 import { Historic } from "../../libs/realm/schemas/Historic";
 
-import { CarStatus } from "../../compoents/CarStatus";
-import { HomeHeader } from "../../compoents/HomeHeader";
-import { HistoricCard, HistoricCardProps } from "../../compoents/HistoricCard";
+import { CarStatus } from "../../components/CarStatus";
+import { HomeHeader } from "../../components/HomeHeader";
+import { HistoricCard, HistoricCardProps } from "../../components/HistoricCard";
 
 import { Container, Content, Label, Title } from "./styles";
+import { useUser } from "@realm/react";
 
 export function Home() {
   const [vehicleInUse, setVehicleInUse] = useState<Historic | null>(null);
@@ -21,6 +22,7 @@ export function Home() {
   
   const historic = useQuery(Historic)
   const realm = useRealm();
+  const user = useUser();
 
   const handleRegisterMovement = () => {
     if(vehicleInUse?._id){
@@ -40,9 +42,11 @@ export function Home() {
     }
   };
 
-  function fetchHistoric() {
+  async function fetchHistoric() {
     try {
       const response = historic.filtered("status='arrival' SORT(created_at DESC)");
+
+
       const formattedHistoric = response.map((item) => {
         return ({
           id: item._id.toString(),
@@ -62,6 +66,7 @@ export function Home() {
     navigate('arrival', { id })
   }
 
+
   useEffect(() => {
     fetchVehicleInUse();
   },[])
@@ -79,6 +84,14 @@ export function Home() {
   useEffect(() => {
     fetchHistoric();
   },[historic]);  
+
+  useEffect(() => {
+    realm.subscriptions.update((mutableSubs, realm) => {
+      const historicByUserQuery = realm.objects('Historic').filtered(`user_id = '${user!.id}'`);
+      mutableSubs.add(historicByUserQuery, { name: 'hostoric_by_user' });
+    })
+  },[realm]);
+
 
   return (
     <Container>
